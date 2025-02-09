@@ -1,16 +1,22 @@
 pipeline {
-    agent {
-        docker { image 'maven:3.8.1-adoptopenjdk-11' }
-    }
+    agent any
+
     stages {
         stage('Build') {
             steps {
-                sh 'mvn clean compile'  // Only compile, no packaging into JAR
+                script {
+                    // Run Maven to clean and install the dependencies
+                    sh 'mvn clean install'
+                }
             }
         }
+
         stage('Run') {
             steps {
-                sh 'java -cp target/classes Main'  // Run the compiled Main.java
+                script {
+                    // Run the compiled Main class (assuming package is com.example)
+                    sh 'java -cp target/classes com.example.Main'
+                }
             }
         }
     }
